@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+{% extends 'shop/base.html' %}
+{% block title %}Check Out {% endblock %}
+{% block content %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>Check Out </h1>
+<div class="order-info" >
+    <ul>
+        {% for item in cart %}
+        <li> {{item.quantity}} x {{item.product.name}} <span>${{item.total_price}}</span></li>
+        {% endfor %}
+    </ul>
+    <p>Total : {{cart.get_total_price}}</p>
+
+</div>
+<form method="post" action="{% url 'orders:order_create'%}" class="order-form">
+    {% csrf_token %}
+    {{form.as_p}}
+    <input type="submit" value="Place order">
+</form>
+</body>
+</html>
+{% endblock %}

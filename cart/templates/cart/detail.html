@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+{% extends 'shop/base.html' %}
+{% load static %}
+{% block title %}You Shopping Cart {% endblock %}
+{% block content %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<h1>Your Shopping Cart</h1>
+<table class="table">
+    <thead>
+    <tr>
+        <th>Image</th>
+        <th>Product</th>
+        <th>Quantity</th>
+        <th>Remove</th>
+        <th>Unit Price</th>
+        <th>Price</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for item in cart %}
+        {% with product=item.product %}
+        <tr>
+            <td>
+                <a href="{{product.get_absolute_url}}">
+                    <img src="{% if product.image %}{{product.image.url}}{% else %}{% static 'img/no_image.png'%}{% endif %}">
+                </a>
+            </td>
+            <td>{{product.name}}</td>
+            <td>
+                <form method="post" action="{% url 'cart:cart_add' product.id %}">
+                    {% csrf_token %}
+                    {{item.update_quantity_form.quantity}}
+                    {{item.update_quantity_form.override}}
+                    <input type="submit" value="update">
+                </form>
+            </td>
+            <td>
+                <form action="{% url 'cart:cart_remove' product.id %}" method="post">
+                    {% csrf_token %}
+                    <input value="Remove" type="submit">
+                </form>
+            </td>
+            <td class="num">{{item.price}}</td>
+            <td class="num">{{item.total_price}}</td>
+        </tr>
+        {% endwith %}
+    {% endfor %}
+    <tr class="total">
+        <td>total</td>
+        <td colspan="4"></td>
+        <td class="num">${{cart.get_total_price}}</td>
+    </tr>
+    </tbody>
+</table>
+    <p class="text-right">
+    <a href="{% url 'shop:product_list'%}" class="buttonlight">Continue shopping</a>
+    <a href="{% url 'orders:order_create' %}" class="button">Checkout</a>
+    </p>
+</body>
+</html>
+{% endblock %}
