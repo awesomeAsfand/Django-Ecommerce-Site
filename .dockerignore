@@ -1,0 +1,11 @@
+.git
+.env
+.venv
+venv
+book-reference
+**/__pycache__
+**/*.pyc
+myshop/db.sqlite3
+myshop/media
+myshop/staticfiles
+data
